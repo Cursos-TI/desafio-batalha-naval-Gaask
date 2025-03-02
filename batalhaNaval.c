@@ -1,112 +1,101 @@
 #include <stdio.h>
 
-int linha, linhaJ, coluna, colunaJ, valido = 0; // linhaJ é o que é exibido, linha é o que de fato é calculado
-int tabuleiro[10][10] = {0};                    // Inicializa um tabuleiro 10x10. = 0 indica que todos os valores do tabuleiro são 0.
+#define LINHAS 10 //Define o tamanho do tabuleiro em linhas
+#define COLUNAS 10 //Define o tamanho do tabuleiro em colunas
 
-// Função para imprimir o tabuleiro
-void imprimirTabuleiro(int tabuleiro[10][10]) // Função que chama a matriz como argumento
+int tabuleiro[LINHAS][COLUNAS]; //Define o tabuleiro
+int linha, coluna, linha2, coluna2, verificacao; //Define as variáveis de linha, coluna, linha2, coluna2 e verificação
+
+void imprimirTabuleiro(int tabuleiro[LINHAS][COLUNAS]) //Função para imprimir o tabuleiro
 {
-  for (int i = 0; i < 10; i++) // Loop para percorrer e definir as 10 linhas como 0
+  // int numero = 0;
+  for (int i = 0; i < LINHAS; i++) //Loop para percorrer as linhas
   {
-    for (int j = 0; j < 10; j++) // Loop para percorrer e definir as 10 colunas como 0
+    for (int j = 0; j < COLUNAS; j++) //Loop para percorrer as colunas
     {
-      printf("%d ", tabuleiro[i][j]); // Imprime o tabuleiro com um espaço entre os "0" e "3"
-      // Se o \n estiver aqui, a saída será "0" linha por linha
+      printf("%d ", tabuleiro[i][j]); //Imprime o tabuleiro
     }
-    printf("\n"); // Pula a linha dentro do loop de linha, para formatar o tabuleiro como um quadrado
+    printf("\n"); //Pula uma linha para o tabuleiro ficar organizado
   }
 }
-void navio1()
+void posicao1(int linha, int coluna) //Função para posicionar o navio 1
 {
-  do //Repetição do jogo
+  do //Loop de posicionamento
   {
-    printf("\n\nOnde você quer posicionar seu navio? Digite a linha de 1 a 10: "); //Inicia odiálogo com usuário
-    scanf("%d", &linha);
-    printf("\nAgora, digite a coluna de 1 a 10: ");
-    scanf("%d", &coluna);
-    if (linha <= 10 && linha > 0 && coluna <= 10 && coluna > 0) //Verifica se a posição é válida
+    printf("\n\nEscolha uma linha de 1 a 10: "); //Pede para o usuário escolher uma linha
+    scanf("%d", &linha); //Lê a linha escolhida
+    printf("\n\nEscolha uma coluna de 1 a 10: "); //Pede para o usuário escolher uma coluna
+    scanf("%d", &coluna); //Lê a coluna escolhida
+    if (linha > 0 && linha <= LINHAS && coluna <= COLUNAS && coluna > 0) //Verifica se a linha e a coluna escolhidas estão dentro do tabuleiro
     {
-      linhaJ = linha; //Faz com que o valor de exibição e posição da matriz sejam iguais
-      colunaJ = coluna;
-      tabuleiro[linha - 1][coluna - 1] = 3; //Posiciona o navio na posição que o jogador selecionou
-      printf("\nVocê selecionou: linha %d, coluna %d.\n\n", linhaJ, colunaJ);
-      valido = 1; //Valida a posição
-      if (coluna > 8) //Se ele selecionou uma coluna acima da 8, adiciona 2 navios nas colunas de trás
+      printf("Posições válidas.\n"); //Imprime que as posições são válidas
+      tabuleiro[linha - 1][coluna - 1] = 3; //Posiciona o navio na posição escolhida
+      verificacao = 0; //Atribui 0 à variável de verificação
+      if (linha > 2) //verifica se a linha escolhida é ou não anterior a 3
       {
-        tabuleiro[--linha][coluna - 2] = 3; // em matrizes, a linha 1 do jogador é = linha 0, por isso, decremento
-        tabuleiro[linha][coluna - 3] = 3;   // as colunas são decrementadas para posicionar o navio horizontamente
+        tabuleiro[linha - 2][coluna - 1] = 3; //Posiciona o navio na linha anterior
+        tabuleiro[linha - 3][coluna - 1] = 3; //Posiciona o navio na linha anterior à anterior
       }
-      else //Se não, adiciona os dois na frente
+      else //Se a linha escolhida for anterior a 3
       {
-        tabuleiro[--linha][coluna] = 3;
-        tabuleiro[linha][++coluna] = 3;
+        tabuleiro[linha][coluna - 1] = 3; //Posiciona o navio na linha posterior
+        tabuleiro[linha + 1][coluna - 1] = 3; //Posiciona o navio na linha posterior à posterior
       }
     }
-    else //sSe a posição for inválida
+    else //Se a linha e a coluna escolhidas não estiverem dentro do tabuleiro
     {
-      printf("posições inválidas.\n");
+      printf("Posições inválidas.\n"); //Imprime que as posições são inválidas
+      verificacao = 1; //Atribui 1 à variável de verificação
     }
-  } while (valido != 1);
-  imprimirTabuleiro(tabuleiro);
+  } while (verificacao == 1); //Enquanto a verificação for igual a 1, o loop continua e o jogador deve escolher outra posição
 }
-void navio2()
+void posicao2(int linha2, int coluna2) //Função para posicionar o navio 2
 {
-  do //Inicializa o loop
+  do //Loop de posicionamento
   {
-    printf("\n\nOnde você quer posicionar seu segundo navio? Digite a linha de 1 a 10: ");
-    scanf("%d", &linha);
-    printf("\nAgora, digite a coluna de 1 a 10: ");
-    scanf("%d", &coluna);
-    if (coluna > 0 && coluna <= 10 && linha > 0 && linha <= 10)
-    {
-      linhaJ = linha;
-      colunaJ = coluna;
+    printf("\n\nEscolha uma linha de 1 a 10 para a segunda posição: "); //Pede para o usuário escolher uma linha para a segunda posição
+    scanf("%d", &linha2); //Lê a linha escolhida
+    printf("\n\nEscolha uma coluna de 1 a 10 para a segunda posição: "); //Pede para o usuário escolher uma coluna para a segunda posição
+    scanf("%d", &coluna2); //Lê a coluna escolhida
 
-      // Verifica se as posições do navio estão livres
-      if (tabuleiro[linha - 1][coluna - 1] == 3 ||
-          (linha < 9 && tabuleiro[linha][coluna - 1] == 3) ||
-          (linha < 8 && tabuleiro[linha + 1][coluna - 1] == 3))
-      {
-        printf("Posições inválidas.\n");
-        valido = 0;
-      }
-      else if (linha < 8) //Se a linha que o jogador selecionou for menor que 8, adiciona 2 navios abaixo.
-      {
-        tabuleiro[linha - 1][coluna - 1] = 3;
-        tabuleiro[linha][coluna - 1] = 3;
-        tabuleiro[linha + 1][coluna - 1] = 3;
-        valido = 1;
-      }
-      else //Se não, dois acima.
-      {
-        if (tabuleiro[linha - 2][coluna - 1] == 3 || tabuleiro[linha - 3][coluna - 1] == 3) //Valida as posições
-        {
-          printf("Posições inválidas.\n");
-          valido = 0;
-        }
-        else
-        {
-          tabuleiro[linha - 1][coluna - 1] = 3;
-          tabuleiro[linha - 2][coluna - 1] = 3;
-          tabuleiro[linha - 3][coluna - 1] = 3;
-          valido = 1;
-        }
-      }
-    }
-    else
+    int sobreposicao = 0; //Inicializa a variável de sobreposição com 0
+    if (tabuleiro[linha2 - 1][coluna2 - 1] == 3 || (coluna2 - 2 >= 0 && tabuleiro[linha2 - 1][coluna2 - 2] == 3) || (coluna2 - 3 >= 0 && tabuleiro[linha2 - 1][coluna2 - 3] == 3)) //Verifica se a posição escolhida está ocupada e/ou se está fora do tabuleiro
     {
-      printf("Posições inválidas.\n");
+      sobreposicao = 1; //Atribui 1 à variável de sobreposição se a posição estiver ocupada e/ou fora do tabuleiro
     }
-  } while (valido != 1);
-  imprimirTabuleiro(tabuleiro); //Imprime o tabuleiro
+
+    if (linha2 > 0 && linha2 <= LINHAS && coluna2 <= COLUNAS && coluna2 > 0 && tabuleiro[linha2 - 1][coluna2 - 1] != 3 && sobreposicao == 0) //Verifica se a linha e a coluna escolhidas estão dentro do tabuleiro e se a posição não está ocupada
+    {
+      printf("Posições válidas.\n"); //Imprime que as posições são válidas
+      tabuleiro[linha2 - 1][coluna2 - 1] = 3; //Posiciona o navio na posição escolhida
+      verificacao = 0; //Atribui 0 à variável de verificação
+      if (coluna2 > 2) //Verifica se a coluna escolhida é ou não anterior a 3
+      {
+        tabuleiro[linha2 - 1][coluna2 - 2] = 3; //Posiciona o navio na coluna anterior
+        tabuleiro[linha2 - 1][coluna2 - 3] = 3; //Posiciona o navio na coluna anterior à anterior
+      }
+      else //Se a coluna escolhida for anterior a 3
+      {
+        tabuleiro[linha2 - 1][coluna2] = 3; //Posiciona o navio na coluna posterior
+        tabuleiro[linha2 - 1][coluna2 + 1] = 3; //Posiciona o navio na coluna posterior à posterior
+      }
+    }
+    else //Se a linha e a coluna escolhidas não estiverem dentro do tabuleiro ou a posição estiver ocupada
+    {
+      printf("Posições inválidas ou ocupadas.\n"); //Imprime que as posições são inválidas ou ocupadas
+      verificacao = 1; //Atribui 1 à variável de verificação
+    }
+  } while (verificacao == 1);
 }
 
-int main()
+int main() //Função principal
 {
-  printf("- - - VOCÊ ESTÁ JOGANDO BATALHA NAVAL - - -\n");
-  printf("O tabuleiro é 10x10. O primeiro passo é você escolher onde posicionar o seu navio.\n\n");
-  imprimirTabuleiro(tabuleiro); //Imprime o tabuleiro
-  navio1(); //Chama a função de seleção do navio 1
-  navio2(); //Chama a função de seleção do navio 2
-  return 0; //Encerra
+  imprimirTabuleiro(tabuleiro); //Chama a função para imprimir o tabuleiro
+  posicao1(linha, coluna); //Chama a função para posicionar o navio 1
+  imprimirTabuleiro(tabuleiro); //Chama a função para imprimir o tabuleiro
+
+  posicao2(linha2, coluna2); //Chama a função para posicionar o navio 2
+  imprimirTabuleiro(tabuleiro); //Chama a função para imprimir o tabuleiro
+
+  return 0; //Retorna 0
 }
